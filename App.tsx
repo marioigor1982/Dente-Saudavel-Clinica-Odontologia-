@@ -40,7 +40,7 @@ const App: React.FC = () => {
           if (favicon) favicon.href = logoUrl;
         }
       } catch (e) {
-        console.error("Failed to load logo", e);
+        console.error("Critical error loading logo, rendering without it.", e);
       }
     };
     loadImages();
