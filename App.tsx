@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import Header from './components/Header';
 import Hero from './components/Hero';
@@ -19,7 +20,6 @@ const App: React.FC = () => {
     logo: ''
   });
 
-  // Lista consolidada de 7 fotos de alta qualidade para o carrossel
   const heroPhotos = [
     'https://i.postimg.cc/QChjLZk3/premium-photo-1663088767412-b10c8dc27ad1.jpg',
     'https://i.postimg.cc/QChjLZkN/photo-1629909613654-28e377c37b09.jpg',
@@ -32,22 +32,17 @@ const App: React.FC = () => {
 
   useEffect(() => {
     const loadImages = async () => {
-      const logoImg = await generateLogo();
-      const logoUrl = logoImg || '';
-
-      setImages(prev => ({
-        ...prev,
-        logo: logoUrl
-      }));
-
-      if (logoUrl) {
-        const favicon = document.getElementById('dynamic-favicon') as HTMLLinkElement;
-        if (favicon) {
-          favicon.href = logoUrl;
+      try {
+        const logoUrl = await generateLogo();
+        if (logoUrl) {
+          setImages(prev => ({ ...prev, logo: logoUrl }));
+          const favicon = document.getElementById('dynamic-favicon') as HTMLLinkElement;
+          if (favicon) favicon.href = logoUrl;
         }
+      } catch (e) {
+        console.error("Failed to load logo", e);
       }
     };
-
     loadImages();
   }, []);
 
