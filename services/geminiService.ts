@@ -14,7 +14,6 @@ const getApiKey = () => {
 export const generateLogo = async (): Promise<string | null> => {
   const apiKey = getApiKey();
   
-  // Se a cota já estourou ou não tem chave, nem tenta
   if (!apiKey || isQuotaExhausted) {
     return LOGO_FALLBACK;
   }
@@ -47,7 +46,6 @@ export const generateLogo = async (): Promise<string | null> => {
   } catch (error: any) {
     if (error?.message?.includes("429") || error?.status === 429) {
       isQuotaExhausted = true;
-      console.warn("Gemini Quota Exhausted. Switching to Fallback Logo permanently for this session.");
     }
     return LOGO_FALLBACK;
   }
@@ -72,7 +70,10 @@ export const generateDentalImage = async (prompt: string): Promise<string | null
       if (part.inlineData) return `data:image/png;base64,${part.inlineData.data}`;
     }
     return null;
-  } catch (error) {
+  } catch (error: any) {
+    if (error?.message?.includes("429") || error?.status === 429) {
+      isQuotaExhausted = true;
+    }
     return null;
   }
 };

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import Header from './components/Header';
 import Hero from './components/Hero';
@@ -21,7 +20,7 @@ const App: React.FC = () => {
   });
 
   const heroPhotos = [
-    'https://i.postimg.cc/QChjLZk3/premium-photo-1663088767412-b10c8dc27ad1.jpg',
+    'https://i.postimg.cc/QChjLZ3/premium-photo-1663088767412-b10c8dc27ad1.jpg',
     'https://i.postimg.cc/QChjLZkN/photo-1629909613654-28e377c37b09.jpg',
     'https://i.postimg.cc/90Cc3Ht5/photo_1722407348833_35e0df48bf53.jpg',
     'https://i.postimg.cc/Y0MtcBf7/premium_photo_1675686363504_ba2df7786f16.jpg',
@@ -31,19 +30,16 @@ const App: React.FC = () => {
   ];
 
   useEffect(() => {
-    const loadImages = async () => {
-      try {
-        const logoUrl = await generateLogo();
-        if (logoUrl) {
-          setImages(prev => ({ ...prev, logo: logoUrl }));
-          const favicon = document.getElementById('dynamic-favicon') as HTMLLinkElement;
-          if (favicon) favicon.href = logoUrl;
-        }
-      } catch (e) {
-        console.error("Critical error loading logo, rendering without it.", e);
+    const loadInitialAssets = async () => {
+      // Tentamos carregar o logo, mas se falhar (429), o serviço já retorna o fallback SVG
+      const logoUrl = await generateLogo();
+      if (logoUrl) {
+        setImages(prev => ({ ...prev, logo: logoUrl }));
+        const favicon = document.getElementById('dynamic-favicon') as HTMLLinkElement;
+        if (favicon) favicon.href = logoUrl;
       }
     };
-    loadImages();
+    loadInitialAssets();
   }, []);
 
   const treatments: ServiceItem[] = [
